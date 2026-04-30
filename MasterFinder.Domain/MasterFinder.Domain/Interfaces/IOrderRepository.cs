@@ -1,11 +1,11 @@
 ﻿using MasterFinder.Domain.Entities;
+using MasterFinder.Domain.Interfaces;
 
 namespace MasterFinder.Domain.Interfaces
 {
-    public interface IOrderRepository : IRepository<Order>
+    public interface IOrderRepository : IRepository<Order, Guid>
     {
-        Task<IEnumerable<Order>> GetOpenOrdersAsync();
-        Task<IEnumerable<Order>> GetByCustomerIdAsync(int customerId);
-        Task<IEnumerable<Response>> GetOrderResponsesAsync(int orderId);
+        Task<IEnumerable<Order>> GetOpenOrdersAsync(CancellationToken cancellationToken);
+        Task<IEnumerable<Order>> GetByCustomerIdAsync(Guid customerId, CancellationToken cancellationToken);
     }
 }

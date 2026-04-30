@@ -1,23 +1,35 @@
-﻿namespace MasterFinder.Domain.ValueObject.Base
+﻿using MasterFinder.ValueObjects.Exceptions;
+
+namespace MasterFinder.ValueObjects.Base
 {
-    public abstract class ValueObject
+    public abstract class ValueObject<T> : IEquatable<ValueObject<T>>
     {
-        protected abstract IEnumerable<object> GetEqualityComponents();
+        public T Value { get; }
 
-        public override bool Equals(object? obj)
+        protected ValueObject(IValidator<T> validator, T value)
         {
-            if (obj == null || obj.GetType() != GetType())
-                return false;
+            if (validator == null)
+                throw new ValidatorNullException(nameof(validator));
 
-            var other = (ValueObject)obj;
-            return GetEqualityComponents().SequenceEqual(other.GetEqualityComponents());
+            validator.Validate(value);
+            Value = value;
         }
 
-        public override int GetHashCode()
+        public override string ToString() => Value?.ToString() ?? GetType().ToString();
+        public override int GetHashCode() => Value?.GetHashCode() ?? 0;
+        public override bool Equals(object? other) => Equals(other as ValueObject<T>);
+
+        public bool Equals(ValueObject<T>? other)
         {
-            return GetEqualityComponents()
-                .Select(x => x?.GetHashCode() ?? 0)
-                .Aggregate((x, y) => x ^ y);
+            if (other is null) return false;
+            if (ReferenceEquals(this, other)) return true;
+            if (GetType() != other.GetType()) return false;
+            return EqualityComparer<T>.Default.Equals(Value, other.Value);
         }
+
+        public static bool operator ==(ValueObject<T>? left, ValueObject<T>? right) => Equals(left, right);
+        public static bool operator !=(ValueObject<T>? left, ValueObject<T>? right) => !(left == right);
     }
 }
+
+

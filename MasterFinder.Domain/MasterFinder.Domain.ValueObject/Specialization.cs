@@ -1,35 +1,10 @@
-﻿using MasterFinder.Domain.ValueObject.Base;
-using MasterFinder.Domain.ValueObject.Exceptions;
+﻿using MasterFinder.ValueObjects.Base;
+using MasterFinder.ValueObjects.Validators;
 
-namespace MasterFinder.Domain.ValueObject
+namespace MasterFinder.ValueObjects
 {
-    public class Specialization : Base.ValueObject
+    public class Specialization : ValueObject<string>
     {
-        public string Value { get; }
-
-        private Specialization(string value)
-        {
-            Value = value;
-        }
-
-        public static Specialization Create(string value)
-        {
-            if (string.IsNullOrWhiteSpace(value))
-                throw new ValueObjectValidationException("Специализация не может быть пустой");
-
-            if (value.Length > 200)
-                throw new ValueObjectValidationException("Специализация не может быть длиннее 200 символов");
-
-            return new Specialization(value);
-        }
-
-        protected override IEnumerable<object> GetEqualityComponents()
-        {
-            yield return Value;
-        }
+        public Specialization(string specialization) : base(new SpecializationValidator(), specialization) { }
     }
 }
-
-
-
-

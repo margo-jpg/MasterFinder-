@@ -4,23 +4,22 @@ using MasterFinder.Domain.Exceptions;
 
 namespace MasterFinder.Domain.Entities
 {
-    public class Response : Entity
+    public class Response : Entity<Guid>
     {
-        public int OrderId { get; private set; }
-        public int ExecutorId { get; private set; }
+        public Order Order { get; private set; }
+        public Executor Executor { get; private set; }
+        public Guid OrderId => Order.Id;
+        public Guid ExecutorId => Executor.Id;
         public string? Comment { get; private set; }
         public ResponseStatus Status { get; private set; }
         public DateTime CreatedAt { get; private set; }
 
-        public Order? Order { get; private set; }
-        public Executor? Executor { get; private set; }
-
         private Response() { }
 
-        public Response(int orderId, int executorId, string? comment = null)
+        public Response(Order order, Executor executor, string? comment = null) : base(Guid.NewGuid())
         {
-            OrderId = orderId;
-            ExecutorId = executorId;
+            Order = order ?? throw new ArgumentNullException(nameof(order));
+            Executor = executor ?? throw new ArgumentNullException(nameof(executor));
             Comment = comment;
             Status = ResponseStatus.Pending;
             CreatedAt = DateTime.UtcNow;

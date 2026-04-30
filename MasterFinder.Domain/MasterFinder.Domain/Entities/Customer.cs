@@ -1,37 +1,33 @@
 ﻿using MasterFinder.Domain.Base;
-using MasterFinder.Domain.ValueObject;
+using MasterFinder.Domain.Exceptions;
+using MasterFinder.ValueObjects;
 
 namespace MasterFinder.Domain.Entities
 {
-    public class Customer : AggregateRoot
+    public class Customer : Entity<Guid>
     {
-        public UserName UserName { get; private set; }
+        public Username Username { get; private set; }
         public PhoneNumber Phone { get; private set; }
         public DateTime CreatedAt { get; private set; }
 
-        private readonly List<Order> _orders = new();
+        private readonly List<Order> _orders = [];
         public IReadOnlyCollection<Order> Orders => _orders.AsReadOnly();
 
         private Customer() { }
 
-        public Customer(string username, string phone)
+        public Customer(Username username, PhoneNumber phone) : base(Guid.NewGuid())
         {
-            UserName = UserName.Create(username);
-            Phone = PhoneNumber.Create(phone);
+            Username = username ?? throw new ArgumentNullException(nameof(username));
+            Phone = phone ?? throw new ArgumentNullException(nameof(phone));
             CreatedAt = DateTime.UtcNow;
         }
 
-        public Order CreateOrder(string title, string? description = null)
+        public Order CreateOrder(OrderTitle title, OrderDescription? description = null)
         {
-            var order = new Order(Id, title, description);
+            var order = new Order(this, title, description, DateTime.UtcNow);
             _orders.Add(order);
-            AddDomainEvent(new OrderCreatedDomainEvent(Id, order.Id));
             return order;
         }
     }
-
-    public record OrderCreatedDomainEvent(int CustomerId, int OrderId) : IDomainEvent
-    {
-        public DateTime OccurredOn { get; } = DateTime.UtcNow;
-    }
 }
+

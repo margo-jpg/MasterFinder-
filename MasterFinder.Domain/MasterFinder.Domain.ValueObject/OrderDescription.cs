@@ -1,32 +1,10 @@
-﻿using MasterFinder.Domain.ValueObject.Base;
-using MasterFinder.Domain.ValueObject.Exceptions;
+﻿using MasterFinder.ValueObjects.Base;
+using MasterFinder.ValueObjects.Validators;
 
-namespace MasterFinder.Domain.ValueObject
+namespace MasterFinder.ValueObjects
 {
-    public class OrderDescription : Base.ValueObject
+    public class OrderDescription : ValueObject<string?>
     {
-        public string? Value { get; }
-
-        private OrderDescription(string? value)
-        {
-            Value = value;
-        }
-
-        public static OrderDescription Create(string? value)
-        {
-            if (value != null && value.Length > 5000)
-                throw new ValueObjectValidationException("Описание заказа не может быть длиннее 5000 символов");
-
-            return new OrderDescription(value);
-        }
-
-        protected override IEnumerable<object> GetEqualityComponents()
-        {
-            yield return Value ?? string.Empty;
-        }
+        public OrderDescription(string? description) : base(new OrderDescriptionValidator(), description) { }
     }
 }
-
-
-
-

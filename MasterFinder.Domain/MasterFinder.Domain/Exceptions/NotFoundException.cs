@@ -2,9 +2,7 @@
 {
     public class NotFoundException : DomainException
     {
-        public NotFoundException(string entityName, int id)
-            : base($"{entityName} с ID {id} не найден", "NOT_FOUND")
-        {
-        }
+        public NotFoundException(string entityName, object id)
+            : base($"{entityName} с ID {id} не найден") { }
     }
 }

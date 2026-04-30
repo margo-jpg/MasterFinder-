@@ -1,10 +1,11 @@
 ﻿using MasterFinder.Domain.Entities;
+using MasterFinder.Domain.Interfaces;
 
 namespace MasterFinder.Domain.Interfaces
 {
-    public interface ICustomerRepository : IRepository<Customer>
+    public interface ICustomerRepository : IRepository<Customer, Guid>
     {
-        Task<IEnumerable<Order>> GetCustomerOrdersAsync(int customerId);
-        Task<Customer?> GetByPhoneAsync(string phone);
+        Task<Customer?> GetByPhoneAsync(string phone, CancellationToken cancellationToken);
+        Task<IEnumerable<Order>> GetCustomerOrdersAsync(Guid customerId, CancellationToken cancellationToken);
     }
 }

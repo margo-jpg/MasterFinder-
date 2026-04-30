@@ -3,24 +3,23 @@ using MasterFinder.Domain.Exceptions;
 
 namespace MasterFinder.Domain.Entities
 {
-    public class Execution : Entity
+    public class Execution : Entity<Guid>
     {
-        public int OrderId { get; private set; }
-        public int ExecutorId { get; private set; }
+        public Order Order { get; private set; }
+        public Executor Executor { get; private set; }
+        public Guid OrderId => Order.Id;
+        public Guid ExecutorId => Executor.Id;
         public DateTime? StartedAt { get; private set; }
         public DateTime? CompletedAt { get; private set; }
         public DateTime? CancelledAt { get; private set; }
         public string? CancelReason { get; private set; }
 
-        public Order? Order { get; private set; }
-        public Executor? Executor { get; private set; }
-
         private Execution() { }
 
-        public Execution(int orderId, int executorId)
+        public Execution(Order order, Executor executor) : base(Guid.NewGuid())
         {
-            OrderId = orderId;
-            ExecutorId = executorId;
+            Order = order ?? throw new ArgumentNullException(nameof(order));
+            Executor = executor ?? throw new ArgumentNullException(nameof(executor));
             StartedAt = DateTime.UtcNow;
         }
 

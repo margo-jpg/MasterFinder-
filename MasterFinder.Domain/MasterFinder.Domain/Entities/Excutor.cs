@@ -1,30 +1,27 @@
 ﻿using MasterFinder.Domain.Base;
 using MasterFinder.Domain.Enums;
-using MasterFinder.Domain.ValueObject;
 using MasterFinder.Domain.Exceptions;
+using MasterFinder.ValueObjects;
 
 namespace MasterFinder.Domain.Entities
 {
-    public class Executor : AggregateRoot
+    public class Executor : Entity<Guid>
     {
-        public UserName UserName { get; private set; }
+        public Username Username { get; private set; }
         public PhoneNumber Phone { get; private set; }
         public Specialization Specialization { get; private set; }
         public DateTime CreatedAt { get; private set; }
 
-        private readonly List<Response> _responses = new();
+        private readonly List<Response> _responses = [];
         public IReadOnlyCollection<Response> Responses => _responses.AsReadOnly();
-
-        private readonly List<Execution> _executions = new();
-        public IReadOnlyCollection<Execution> Executions => _executions.AsReadOnly();
 
         private Executor() { }
 
-        public Executor(string username, string phone, string specialization)
+        public Executor(Username username, PhoneNumber phone, Specialization specialization) : base(Guid.NewGuid())
         {
-            UserName = UserName.Create(username);
-            Phone = PhoneNumber.Create(phone);
-            Specialization = Specialization.Create(specialization);
+            Username = username ?? throw new ArgumentNullException(nameof(username));
+            Phone = phone ?? throw new ArgumentNullException(nameof(phone));
+            Specialization = specialization ?? throw new ArgumentNullException(nameof(specialization));
             CreatedAt = DateTime.UtcNow;
         }
 
@@ -36,15 +33,10 @@ namespace MasterFinder.Domain.Entities
             if (_responses.Any(r => r.OrderId == order.Id))
                 throw new BusinessRuleViolationException("Вы уже откликались на этот заказ");
 
-            var response = new Response(order.Id, Id, comment);
+            var response = new Response(order, this, comment);
             _responses.Add(response);
-            AddDomainEvent(new ResponseCreatedDomainEvent(Id, order.Id));
+            order.AddResponse(response);
             return response;
         }
-    }
-
-    public record ResponseCreatedDomainEvent(int ExecutorId, int OrderId) : IDomainEvent
-    {
-        public DateTime OccurredOn { get; } = DateTime.UtcNow;
     }
 }

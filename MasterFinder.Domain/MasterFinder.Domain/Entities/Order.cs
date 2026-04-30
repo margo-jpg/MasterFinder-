@@ -1,35 +1,41 @@
 ﻿using MasterFinder.Domain.Base;
 using MasterFinder.Domain.Enums;
-using MasterFinder.Domain.ValueObject;
 using MasterFinder.Domain.Exceptions;
+using MasterFinder.ValueObjects;
 
 namespace MasterFinder.Domain.Entities
 {
-    public class Order : AggregateRoot
+    public class Order : Entity<Guid>
     {
-        public int CustomerId { get; private set; }
+        public Customer Customer { get; private set; }
         public OrderTitle Title { get; private set; }
         public OrderDescription Description { get; private set; }
         public OrderStatus Status { get; private set; }
         public DateTime CreatedAt { get; private set; }
 
-        private readonly List<Response> _responses = new();
+        private readonly List<Response> _responses = [];
         public IReadOnlyCollection<Response> Responses => _responses.AsReadOnly();
 
         public Execution? Execution { get; private set; }
 
         private Order() { }
 
-        public Order(int customerId, string title, string? description = null)
+        public Order(Customer customer, OrderTitle title, OrderDescription? description, DateTime createdAt) : base(Guid.NewGuid())
         {
-            CustomerId = customerId;
-            Title = OrderTitle.Create(title);
-            Description = OrderDescription.Create(description);
+            Customer = customer ?? throw new ArgumentNullException(nameof(customer));
+            Title = title ?? throw new ArgumentNullException(nameof(title));
+            Description = description ?? new OrderDescription(null);
             Status = OrderStatus.Open;
-            CreatedAt = DateTime.UtcNow;
+            CreatedAt = createdAt;
         }
 
-        public void AcceptResponse(int responseId)
+        public void AddResponse(Response response)
+        {
+            if (!_responses.Contains(response))
+                _responses.Add(response);
+        }
+
+        public void AcceptResponse(Guid responseId)
         {
             if (Status != OrderStatus.Open)
                 throw new BusinessRuleViolationException("Заказ уже не в статусе Open");
@@ -39,31 +45,21 @@ namespace MasterFinder.Domain.Entities
                 throw new NotFoundException("Отклик", responseId);
 
             response.Accept();
-
-            foreach (var otherResponse in _responses.Where(r => r.Id != responseId))
-            {
-                if (otherResponse.Status == ResponseStatus.Pending)
-                    otherResponse.Reject();
-            }
-
-            AddDomainEvent(new ResponseAcceptedDomainEvent(responseId, Id));
         }
 
-        public void StartExecution(int executorId)
+        public void StartExecution(Executor executor)
         {
             if (Status != OrderStatus.Open)
                 throw new BusinessRuleViolationException("Заказ должен быть открыт");
 
             var acceptedResponse = _responses.FirstOrDefault(r =>
-                r.ExecutorId == executorId && r.Status == ResponseStatus.Accepted);
+                r.Executor.Id == executor.Id && r.Status == ResponseStatus.Accepted);
 
             if (acceptedResponse == null)
                 throw new BusinessRuleViolationException("Этот исполнитель не был принят на заказ");
 
             Status = OrderStatus.InProgress;
-            Execution = new Execution(Id, executorId);
-
-            AddDomainEvent(new ExecutionStartedDomainEvent(Id, executorId));
+            Execution = new Execution(this, executor);
         }
 
         public void Complete()
@@ -71,13 +67,8 @@ namespace MasterFinder.Domain.Entities
             if (Status != OrderStatus.InProgress)
                 throw new BusinessRuleViolationException("Заказ не в работе");
 
-            if (Execution == null)
-                throw new BusinessRuleViolationException("Нет информации о выполнении");
-
             Status = OrderStatus.Completed;
-            Execution.Complete();
-
-            AddDomainEvent(new OrderCompletedDomainEvent(Id));
+            Execution?.Complete();
         }
 
         public void Cancel(string? reason = null)
@@ -86,33 +77,7 @@ namespace MasterFinder.Domain.Entities
                 throw new BusinessRuleViolationException("Завершенный заказ нельзя отменить");
 
             Status = OrderStatus.Cancelled;
-
-            if (Execution != null && Execution.StartedAt != null && Execution.CompletedAt == null)
-            {
-                Execution.Cancel(reason);
-            }
-
-            AddDomainEvent(new OrderCancelledDomainEvent(Id, reason));
+            Execution?.Cancel(reason);
         }
-    }
-
-    public record ResponseAcceptedDomainEvent(int ResponseId, int OrderId) : IDomainEvent
-    {
-        public DateTime OccurredOn { get; } = DateTime.UtcNow;
-    }
-
-    public record ExecutionStartedDomainEvent(int OrderId, int ExecutorId) : IDomainEvent
-    {
-        public DateTime OccurredOn { get; } = DateTime.UtcNow;
-    }
-
-    public record OrderCompletedDomainEvent(int OrderId) : IDomainEvent
-    {
-        public DateTime OccurredOn { get; } = DateTime.UtcNow;
-    }
-
-    public record OrderCancelledDomainEvent(int OrderId, string? Reason) : IDomainEvent
-    {
-        public DateTime OccurredOn { get; } = DateTime.UtcNow;
     }
 }

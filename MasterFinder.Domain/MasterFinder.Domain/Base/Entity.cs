@@ -1,30 +1,8 @@
 ﻿namespace MasterFinder.Domain.Base
 {
-    public abstract class Entity
+    public abstract class Entity<TId>(TId id) where TId : struct, IEquatable<TId>
     {
-        public int Id { get; protected set; }
-
-        protected Entity() { }
-
-        protected Entity(int id)
-        {
-            Id = id;
-        }
-
-        public override bool Equals(object? obj)
-        {
-            if (obj is not Entity other)
-                return false;
-
-            if (ReferenceEquals(this, other))
-                return true;
-
-            if (GetType() != other.GetType())
-                return false;
-
-            return Id == other.Id;
-        }
-
-        public override int GetHashCode() => Id.GetHashCode();
+        public TId Id { get; } = id;
+        protected Entity() : this(default!) { }
     }
 }
