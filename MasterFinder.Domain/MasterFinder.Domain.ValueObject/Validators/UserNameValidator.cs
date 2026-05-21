@@ -5,20 +5,19 @@ namespace MasterFinder.ValueObjects.Validators
 {
     public class UsernameValidator : IValidator<string>
     {
-        private const int MinLength = 2;
-        private const int MaxLength = 100;
+        public const int MIN_LENGTH = 2;
+        public const int MAX_LENGTH = 100;
 
         public void Validate(string value)
         {
             if (string.IsNullOrWhiteSpace(value))
                 throw new ArgumentNullOrWhiteSpaceException(nameof(value));
 
-            if (value.Length > MaxLength)
-                throw new ArgumentLongValueException(nameof(value), value.Length, MaxLength);
+            if (value.Length > MAX_LENGTH)
+                throw new ArgumentLongValueException(nameof(value), value.Length, MAX_LENGTH);
 
-            if (value.Length < MinLength)
-                throw new ArgumentShortValueException(nameof(value), value.Length, MinLength);
+            if (value.Length < MIN_LENGTH)
+                throw new ArgumentShortValueException(nameof(value), value.Length, MIN_LENGTH);
         }
     }
 }
-

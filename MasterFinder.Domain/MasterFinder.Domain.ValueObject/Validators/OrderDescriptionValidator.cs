@@ -5,12 +5,12 @@ namespace MasterFinder.ValueObjects.Validators
 {
     public class OrderDescriptionValidator : IValidator<string?>
     {
-        private const int MaxLength = 5000;
+        public const int MAX_LENGTH = 5000;
 
         public void Validate(string? value)
         {
-            if (value != null && value.Length > MaxLength)
-                throw new ArgumentLongValueException(nameof(value), value.Length, MaxLength);
+            if (value != null && value.Length > MAX_LENGTH)
+                throw new ArgumentLongValueException(nameof(value), value.Length, MAX_LENGTH);
         }
     }
 }

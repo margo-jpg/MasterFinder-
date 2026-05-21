@@ -6,8 +6,8 @@ namespace MasterFinder.ValueObjects.Validators
 {
     public class PhoneNumberValidator : IValidator<string>
     {
-        private const int MinLength = 10;
-        private const int MaxLength = 15;
+        public const int MIN_LENGTH = 10;
+        public const int MAX_LENGTH = 15;
 
         public void Validate(string value)
         {
@@ -18,11 +18,15 @@ namespace MasterFinder.ValueObjects.Validators
             if (!regex.IsMatch(value))
                 throw new FormatException($"Номер телефона \"{value}\" имеет неверный формат");
 
-            if (value.Length > MaxLength)
-                throw new ArgumentLongValueException(nameof(value), value.Length, MaxLength);
+            if (value.Length > MAX_LENGTH)
+                throw new ArgumentLongValueException(nameof(value), value.Length, MAX_LENGTH);
 
-            if (value.Length < MinLength)
-                throw new ArgumentShortValueException(nameof(value), value.Length, MinLength);
+            if (value.Length < MIN_LENGTH)
+                throw new ArgumentShortValueException(nameof(value), value.Length, MIN_LENGTH);
         }
     }
 }
+
+
+
+

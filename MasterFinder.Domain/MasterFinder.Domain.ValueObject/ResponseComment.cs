@@ -8,7 +8,7 @@ namespace MasterFinder.ValueObjects
     {
         private const int MaxLength = 1000;
 
-        private ResponseComment(string? value) : base(new ResponseCommentValidator(), value)
+        public ResponseComment(string? value) : base(new ResponseCommentValidator(), value)
         {
         }
 

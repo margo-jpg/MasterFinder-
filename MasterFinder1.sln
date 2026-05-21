@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MasterFinder.Domain", "Mast
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MasterFinder.ConsoleTests", "MasterFinder.ConsoleTests\MasterFinder.ConsoleTests.csproj", "{B767BF51-866E-4926-AB4D-CB86964EEBAF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MasterFinder.Infrastructure", "MasterFinder.Infrastructure\MasterFinder.Infrastructure.csproj", "{041B21E0-4B4A-49EB-9A82-8AFA0CF24C17}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -31,6 +33,10 @@ Global
 		{B767BF51-866E-4926-AB4D-CB86964EEBAF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B767BF51-866E-4926-AB4D-CB86964EEBAF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B767BF51-866E-4926-AB4D-CB86964EEBAF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{041B21E0-4B4A-49EB-9A82-8AFA0CF24C17}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{041B21E0-4B4A-49EB-9A82-8AFA0CF24C17}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{041B21E0-4B4A-49EB-9A82-8AFA0CF24C17}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{041B21E0-4B4A-49EB-9A82-8AFA0CF24C17}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -38,6 +44,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{DD5E19FA-F643-47E3-8D75-82631A41D28B} = {36D591C7-65C7-A0D1-1CBC-10CDE441BDC8}
 		{AC76F292-5D26-40C6-943E-7955BBC96E11} = {36D591C7-65C7-A0D1-1CBC-10CDE441BDC8}
+		{041B21E0-4B4A-49EB-9A82-8AFA0CF24C17} = {A08D2462-526F-4BC0-8436-74AA1CF1D5A0}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {77D130FF-7A67-480E-8107-86C1C6EC495C}
