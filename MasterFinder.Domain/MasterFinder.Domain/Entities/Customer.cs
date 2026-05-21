@@ -10,21 +10,28 @@ namespace MasterFinder.Domain.Entities
         public PhoneNumber Phone { get; private set; }
         public DateTime CreatedAt { get; private set; }
 
-        private readonly List<Order> _orders = [];
-        public IReadOnlyCollection<Order> Orders => _orders.AsReadOnly();
+        private readonly ICollection<Order> _orders = new List<Order>();    //исправила
+        public IReadOnlyCollection<Order> Orders => _orders.ToList().AsReadOnly();
 
-        private Customer() { }
+        protected Customer() { }
 
-        public Customer(Username username, PhoneNumber phone) : base(Guid.NewGuid())
+        // Конструктор с полным количеством параметров (для EF)
+        protected Customer(Guid id, Username username, PhoneNumber phone, DateTime createdAt)
+            : base(id)
         {
             Username = username ?? throw new ArgumentNullException(nameof(username));
             Phone = phone ?? throw new ArgumentNullException(nameof(phone));
-            CreatedAt = DateTime.UtcNow;
+            CreatedAt = createdAt;
         }
 
+        // Публичный конструктор (для создания через код)
+        public Customer(Username username, PhoneNumber phone)
+            : this(Guid.NewGuid(), username, phone, DateTime.UtcNow)
+        {
+        }
         public Order CreateOrder(OrderTitle title, OrderDescription? description = null)
         {
-            var order = new Order(this, title, description, DateTime.UtcNow);
+            var order = new Order(title, description, DateTime.UtcNow,this);
             _orders.Add(order);
             return order;
         }

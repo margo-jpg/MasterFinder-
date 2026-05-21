@@ -12,30 +12,41 @@ namespace MasterFinder.Domain.Entities
         public Specialization Specialization { get; private set; }
         public DateTime CreatedAt { get; private set; }
 
-        private readonly List<Response> _responses = [];
-        public IReadOnlyCollection<Response> Responses => _responses.AsReadOnly();
+        private readonly ICollection<Response> _responses = new List<Response>();       //исправила
+        public IReadOnlyCollection<Response> Responses => _responses.ToList().AsReadOnly();
 
-        private Executor() { }
+        private readonly ICollection<Execution> _executions = new List<Execution>();    //наверно надо
+        public IReadOnlyCollection<Execution> Executions => _executions.ToList().AsReadOnly();
+        protected Executor() { }
 
-        public Executor(Username username, PhoneNumber phone, Specialization specialization) : base(Guid.NewGuid())
+        // Защищённый конструктор (для EF)
+        protected Executor(Guid id, Username username, PhoneNumber phone,
+            Specialization specialization, DateTime createdAt)
+            : base(id)
         {
             Username = username ?? throw new ArgumentNullException(nameof(username));
             Phone = phone ?? throw new ArgumentNullException(nameof(phone));
             Specialization = specialization ?? throw new ArgumentNullException(nameof(specialization));
-            CreatedAt = DateTime.UtcNow;
+            CreatedAt = createdAt;
         }
 
-        public Response RespondToOrder(Order order, string? comment = null)
+        // Публичный конструктор
+        public Executor(Username username, PhoneNumber phone, Specialization specialization)
+            : this(Guid.NewGuid(), username, phone, specialization, DateTime.UtcNow)
+        {
+        }
+
+        public Response RespondToOrder(Order order, ResponseComment? comment = null)
         {
             if (order.Status != OrderStatus.Open)
                 throw new BusinessRuleViolationException("Нельзя откликнуться на закрытый заказ");
 
-            if (_responses.Any(r => r.OrderId == order.Id))
+            if (_responses.Any(r => r.Order == order))
                 throw new BusinessRuleViolationException("Вы уже откликались на этот заказ");
 
-            var response = new Response(order, this, comment);
+            var response = order.AddResponse(this, comment);
             _responses.Add(response);
-            order.AddResponse(response);
+            
             return response;
         }
     }

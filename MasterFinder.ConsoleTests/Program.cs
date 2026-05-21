@@ -27,11 +27,12 @@ class Program
             Console.WriteLine($"Заказ: {order.Title.Value} (статус: {order.Status})");
 
             // 4 Исполнитель откликается
-            var response = executor.RespondToOrder(order, "Могу приехать завтра");
+            var comment = ResponseComment.Create("Могу приехать завтра");
+            var response = executor.RespondToOrder(order, comment);
             Console.WriteLine($"Отклик: статус {response.Status}");
 
             // 5 Заказчик принимает отклик
-            order.AcceptResponse(response.Id);
+            order.AcceptResponse(response,customer);
             Console.WriteLine($"Отклик принят: статус {response.Status}");
 
             // 6 Исполнитель начинает выполнение
@@ -39,7 +40,7 @@ class Program
             Console.WriteLine($"Выполнение начато: статус заказа {order.Status}");
 
             // 7 Исполнитель завершает заказ
-            order.Complete();
+            order.Complete(executor);
             Console.WriteLine($"Заказ выполнен: статус {order.Status}");
 
             Console.WriteLine("\nВсе успешно!");
