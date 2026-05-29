@@ -12,8 +12,22 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MasterFinder.Domain", "MasterFinder.Domain\MasterFinder.Domain\MasterFinder.Domain.csproj", "{AC76F292-5D26-40C6-943E-7955BBC96E11}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MasterFinder.ConsoleTests", "MasterFinder.ConsoleTests\MasterFinder.ConsoleTests.csproj", "{B767BF51-866E-4926-AB4D-CB86964EEBAF}"
+	ProjectSection(ProjectDependencies) = postProject
+		{041B21E0-4B4A-49EB-9A82-8AFA0CF24C17} = {041B21E0-4B4A-49EB-9A82-8AFA0CF24C17}
+	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MasterFinder.Infrastructure", "MasterFinder.Infrastructure\MasterFinder.Infrastructure.csproj", "{041B21E0-4B4A-49EB-9A82-8AFA0CF24C17}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MasterFinder.Infrastructure.EntityFramework", "MasterFinder.Infrastructure\MasterFinder.Infrastructure.EntityFramework.csproj", "{041B21E0-4B4A-49EB-9A82-8AFA0CF24C17}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MasterFinder.Migrations", "MasterFinder.Migrations\MasterFinder.Migrations.csproj", "{7656FE7A-D994-4C0A-992C-7D670208BCAC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentation", "{C05CBA97-D8EE-4B5F-B391-7EA2E2CA66A3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MasterFinder.WebHost", "MasterFinder.WebHost\MasterFinder.WebHost.csproj", "{08457BCC-DE9B-45A1-BF19-F66C199F1ACB}"
+	ProjectSection(ProjectDependencies) = postProject
+		{041B21E0-4B4A-49EB-9A82-8AFA0CF24C17} = {041B21E0-4B4A-49EB-9A82-8AFA0CF24C17}
+		{AC76F292-5D26-40C6-943E-7955BBC96E11} = {AC76F292-5D26-40C6-943E-7955BBC96E11}
+		{DD5E19FA-F643-47E3-8D75-82631A41D28B} = {DD5E19FA-F643-47E3-8D75-82631A41D28B}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -37,6 +51,14 @@ Global
 		{041B21E0-4B4A-49EB-9A82-8AFA0CF24C17}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{041B21E0-4B4A-49EB-9A82-8AFA0CF24C17}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{041B21E0-4B4A-49EB-9A82-8AFA0CF24C17}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7656FE7A-D994-4C0A-992C-7D670208BCAC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7656FE7A-D994-4C0A-992C-7D670208BCAC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7656FE7A-D994-4C0A-992C-7D670208BCAC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7656FE7A-D994-4C0A-992C-7D670208BCAC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{08457BCC-DE9B-45A1-BF19-F66C199F1ACB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{08457BCC-DE9B-45A1-BF19-F66C199F1ACB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{08457BCC-DE9B-45A1-BF19-F66C199F1ACB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{08457BCC-DE9B-45A1-BF19-F66C199F1ACB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -45,6 +67,7 @@ Global
 		{DD5E19FA-F643-47E3-8D75-82631A41D28B} = {36D591C7-65C7-A0D1-1CBC-10CDE441BDC8}
 		{AC76F292-5D26-40C6-943E-7955BBC96E11} = {36D591C7-65C7-A0D1-1CBC-10CDE441BDC8}
 		{041B21E0-4B4A-49EB-9A82-8AFA0CF24C17} = {A08D2462-526F-4BC0-8436-74AA1CF1D5A0}
+		{08457BCC-DE9B-45A1-BF19-F66C199F1ACB} = {C05CBA97-D8EE-4B5F-B391-7EA2E2CA66A3}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {77D130FF-7A67-480E-8107-86C1C6EC495C}

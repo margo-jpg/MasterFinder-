@@ -38,13 +38,14 @@ namespace MasterFinder.Infrastructure.EntityFramework.Configurations
 
             builder.HasOne(x => x.Order)
                 .WithOne(x => x.Execution)
-                .HasForeignKey<Execution>("OrderId")
-                .HasPrincipalKey<Order>(x => x.Id);
+                .HasForeignKey<Execution>("OrderId");
+                //.OnDelete(DeleteBehavior.Cascade);
 
-            builder.HasOne(x => x.Executor)
-                .WithMany("_executions")
-                .HasForeignKey("ExecutorId")
-                .HasPrincipalKey(x => x.Id);
+
+            //builder.HasOne(x => x.Executor)
+            //    .WithMany(x => x.Executions)
+            //    .HasForeignKey("ExecutorId");
+           
         }
     }
 }

@@ -32,14 +32,14 @@ namespace MasterFinder.Infrastructure.EntityFramework.Configurations
                     dst => dst.Kind == DateTimeKind.Utc ? dst : DateTime.SpecifyKind(dst, DateTimeKind.Utc));
 
             builder.HasOne(x => x.Order)
-                .WithMany("_responses")
-                .HasForeignKey("OrderId")
-                .HasPrincipalKey(x => x.Id);
+                .WithMany(x => x.Responses)
+                .HasForeignKey("OrderId");
+
 
             builder.HasOne(x => x.Executor)
-                .WithMany("_responses")
-                .HasForeignKey("ExecutorId")
-                .HasPrincipalKey(x => x.Id);
+                .WithMany(x => x.Responses)
+                .HasForeignKey("ExecuterId");
+
         }
     }
 }

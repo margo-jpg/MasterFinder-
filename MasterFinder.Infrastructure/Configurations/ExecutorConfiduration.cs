@@ -40,18 +40,18 @@ namespace MasterFinder.Infrastructure.EntityFramework.Configurations
                     src => src.Kind == DateTimeKind.Utc ? src : DateTime.SpecifyKind(src, DateTimeKind.Utc),
                     dst => dst.Kind == DateTimeKind.Utc ? dst : DateTime.SpecifyKind(dst, DateTimeKind.Utc));
 
-            builder.HasMany<Response>("_responses")
+            builder.HasMany(x => x.Responses)
                 .WithOne(x => x.Executor)
-                .HasForeignKey("ExecutorId")
-                .HasPrincipalKey(x => x.Id);
+                .HasForeignKey("ExecutorId");
+            //.OnDelete(DeleteBehavior.Cascade);
 
-            builder.HasMany<Execution>("_executions")
+            builder.HasMany(x => x.Executions)
                 .WithOne(x => x.Executor)
-                .HasForeignKey("ExecutorId")
-                .HasPrincipalKey(x => x.Id);
+                .HasForeignKey("ExecutorId");
+                //.OnDelete(DeleteBehavior.Cascade);
 
-            builder.Ignore(x => x.Responses);
-            builder.Ignore(x => x.Executions);
+            //builder.Ignore(x => x.Responses);
+            //builder.Ignore(x => x.Executions);
         }
     }
 }

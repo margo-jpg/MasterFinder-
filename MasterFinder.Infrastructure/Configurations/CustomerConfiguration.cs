@@ -38,7 +38,7 @@ namespace MasterFinder.Infrastructure.EntityFramework.Configurations
                 .HasForeignKey("CustomerId")
                 .HasPrincipalKey(x => x.Id);
 
-            builder.Ignore(x => x.Orders);
+            //builder.Ignore(x => x.Orders);
         }
     }
 }
