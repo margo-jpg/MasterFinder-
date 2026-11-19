@@ -22,8 +22,8 @@ namespace MasterFinder.ValueObjects.Base
         public bool Equals(ValueObject<T>? other)
         {
             if (other is null) return false;
-            if (ReferenceEquals(this, other)) return true;
-            if (GetType() != other.GetType()) return false;
+            if (ReferenceEquals(this, other)) return true;                                                                  //ссылаются ли на один и тот же обьект
+            if (GetType() != other.GetType()) return false;                                                                  //проверка типы обьектов   
             return EqualityComparer<T>.Default.Equals(Value, other.Value);
         }
 
