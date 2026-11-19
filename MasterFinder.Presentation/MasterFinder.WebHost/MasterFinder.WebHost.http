@@ -1,0 +1,6 @@
+@MasterFinder.WebHost_HostAddress = http://localhost:5009
+
+GET {{MasterFinder.WebHost_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
