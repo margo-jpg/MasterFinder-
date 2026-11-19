@@ -12,13 +12,21 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+    
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 8.0.x
+        
+    - name: Find Solution
+      run: |
+        find . -name "*.sln"
+        
     - name: Restore dependencies
       run: dotnet restore MasterFinder1.sln
+      
     - name: Build
       run: dotnet build MasterFinder1.sln --no-restore
+      
     - name: Test
       run: dotnet test MasterFinder.Domain.Tests/MasterFinder.Domain.Tests.csproj --no-build --verbosity normal
