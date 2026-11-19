@@ -1,17 +1,41 @@
 name: .NET Tests
-on: [push, pull_request]
+
+on:
+  push:
+    branches: [ "InfrastructureLayer", "DomainLayer", "main" ]
+  pull_request:
+    branches: [ "InfrastructureLayer", "DomainLayer", "main" ]
+
 jobs:
   build:
     runs-on: ubuntu-latest
+    
+    permissions:
+      checks: write
+      pull-requests: write
+      contents: read
+
     steps:
     - uses: actions/checkout@v4
+    
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 8.0.x
+        
     - name: Restore dependencies
       run: dotnet restore
+      
     - name: Build
       run: dotnet build --no-restore
+      
     - name: Test
-      run: dotnet test --no-build --verbosity normal
+      run: dotnet test --no-build --logger "trx;LogFileName=test-results.trx" --verbosity normal
+      
+    - name: Publish Test Report
+      uses: dorny/test-reporter@v1
+      if: success() || failure()    # Показывать отчет, даже если тесты упали
+      with:
+        name: Результаты тестов
+        path: '**/test-results.trx'
+        reporter: dotnet-trx
