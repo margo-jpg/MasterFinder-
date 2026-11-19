@@ -2,9 +2,9 @@ name: .NET Tests
 
 on:
   push:
-    branches: [ "main", "master" ]
+    branches: [ "DomainLayer", "master" ]
   pull_request:
-    branches: [ "main", "master" ]
+    branches: [ "DomainLayer", "master" ]
 
 jobs:
   build:
